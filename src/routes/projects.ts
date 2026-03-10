@@ -19,6 +19,9 @@ router.get("/projects", async (_, res) => {
   // #swagger.tags = ['Projects']
 
   const projects = await Project.find();
+  console.log('****projects ***');
+  // console.log('****projects: ', projects);
+  
   res.json(projects);
 });
 
