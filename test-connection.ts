@@ -11,7 +11,7 @@ if (!uri) {
 
 async function run() {
   try {
-    await mongoose.connect(uri, { bufferCommands: false });
+    await mongoose.connect(uri!, { bufferCommands: false });
     console.log('Connected to MongoDB successfully (TS)');
     await mongoose.disconnect();
     process.exit(0);
