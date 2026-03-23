@@ -8,6 +8,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
+  "https://api-portfolio-kappa.vercel.app"
 ];
 
 app.use(
@@ -37,6 +38,6 @@ app.use(express.json());
 // const swaggerDocument = require("../swagger-output.json");
 // app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/api", projectsRoutes);
+app.use("/", projectsRoutes);
 
 export default app;

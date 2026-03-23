@@ -1,3 +1,5 @@
+console.log('---- ENTRO A INDEX ----');
+
 import serverless from "serverless-http";
 import app from "../src/app";
 import { connectDB } from "../src/config/mongo";
