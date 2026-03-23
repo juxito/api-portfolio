@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import swaggerUi from "swagger-ui-express";
+// import swaggerUi from "swagger-ui-express";
 import projectsRoutes from "./routes/projects";
 
 const app = express();
@@ -34,8 +34,8 @@ app.use(
 app.use(express.json());
 
 // Swagger
-const swaggerDocument = require("../swagger-output.json");
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// const swaggerDocument = require("../swagger-output.json");
+// app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api", projectsRoutes);
 
