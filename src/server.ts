@@ -31,7 +31,7 @@ async function bootstrap() {
     const { default: app } = await import("./app");
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`Servidor local en http://localhost:${PORT}`);
+      console.log(`test Servidor local en http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error);
