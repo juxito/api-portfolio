@@ -1,16 +1,17 @@
-// import type { VercelRequest, VercelResponse } from '@vercel/node';
-// import app from '../src/app';
-// import { connectDB } from '../src/config/mongo';
+import serverless from "serverless-http";
+import app from "../src/app";
+import { connectDB } from "../src/config/mongo";
 
-// export default async function handler(
-//   req: VercelRequest,
-//   res: VercelResponse
-// ) {
-//   try {
-//     await connectDB();
-//     return app(req as any, res as any);
-//   } catch (error) {
-//     console.error('DB connection error:', error);
-//     return res.status(500).json({ error: 'Database connection failed' });
-//   }
-// }
+let isConnected = false;
+
+async function ensureDB() {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+  }
+}
+
+export default async function handler(req: any, res: any) {
+  await ensureDB();
+  return serverless(app)(req, res);
+}
