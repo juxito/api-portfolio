@@ -4,12 +4,19 @@ import { Project } from "../models/Project";
 const router = Router();
 
 router.get("/projects", async (_, res) => {
+  console.log('🔄 GET /projects iniciado');
 
-  const projects = await Project.find();
-  console.log('****projects ***');
-  // console.log('****projects: ', projects);
-  
-  res.json(projects);
+  try {
+    console.log('🔄 Ejecutando Project.find()...');
+    const projects = await Project.find().lean(); // ✅ .lean() más rápido
+    console.log('✅ Project.find() completó, total:', projects.length);
+    
+    res.json(projects);
+    console.log('✅ res.json() enviado');
+  } catch (error: any) {
+    console.error('❌ Error en GET /projects:', error.message);
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Obtener un proyecto por ID
