@@ -23,7 +23,7 @@ export default async function handler(req: any, res: any) {
   );
 
   try {
-    console.error("TRY SERVELESS HANDLER");
+    console.log("TRY SERVELESS HANDLER");
     await Promise.race([ensureDB(), timeout]);
     return serverless(app)(req, res);
   } catch (error: any) {

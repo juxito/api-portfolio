@@ -1,3 +1,4 @@
+import { log } from "console";
 import mongoose from "mongoose";
 
 const MONGO_URI = process.env.MONGO_URI;
@@ -48,12 +49,16 @@ export async function connectDB(): Promise<typeof mongoose> {
         minPoolSize: 0,
       })
       .catch((err) => {
+        console.error("Error connecting to MongoDB:", err);
+        
         // ✅ Limpia el cache si falla — permite reintentar en la próxima llamada
         cached.promise = null;
         cached.conn = null;
         throw err;
       });
   }
+
+  console.log('*!!!!await cached.promise');
 
   cached.conn = await cached.promise;
   return cached.conn;
