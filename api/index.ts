@@ -1,3 +1,5 @@
+console.log('---- ENTRO A INDEX ----');
+
 import serverless from "serverless-http";
 import app from "../src/app";
 import { connectDB } from "../src/config/mongo";
@@ -5,7 +7,10 @@ import { connectDB } from "../src/config/mongo";
 let isConnected = false;
 
 async function ensureDB() {
+  console.log('-------ensureDB');
+  
   if (!isConnected) {
+    console.log('!!!!!!!ensureDB');
     await connectDB();
     isConnected = true;
   }
@@ -18,6 +23,7 @@ export default async function handler(req: any, res: any) {
   );
 
   try {
+    console.error("TRY SERVELESS HANDLER");
     await Promise.race([ensureDB(), timeout]);
     return serverless(app)(req, res);
   } catch (error: any) {

@@ -22,6 +22,8 @@ const cached: MongooseCache = global.mongooseCache ?? {
 global.mongooseCache = cached;
 
 export async function connectDB(): Promise<typeof mongoose> {
+  console.log("Connecting to MongoDB...");
+  
   // ✅ Reutiliza conexión existente y sana
   if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
@@ -34,6 +36,8 @@ export async function connectDB(): Promise<typeof mongoose> {
   }
 
   if (!cached.promise) {
+    console.log('!!!!!cached.promise');
+    
     cached.promise = mongoose
       .connect(MONGO_URI as string, {
         bufferCommands: false,
