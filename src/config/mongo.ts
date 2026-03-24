@@ -39,7 +39,7 @@ export async function connectDB(): Promise<typeof mongoose> {
   if (!cached.promise) {
     console.log("🔄 Iniciando mongoose.connect()...");
     console.log("🔗 URI definida:", !!MONGO_URI);
-    console.log("🔗 URI preview:", MONGO_URI?.substring(0, 30) + "..."); // solo primeros 30 chars
+    console.log("🔗 URI preview:", MONGO_URI?.substring(0, 20) + "..."); // solo primeros 30 chars
 
     cached.promise = mongoose
       .connect(MONGO_URI as string, {

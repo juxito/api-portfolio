@@ -1,15 +1,28 @@
+import { Project } from './../src/models/Project';
 // api/index.ts
 import app from "../src/app";
 import { connectDB } from "../src/config/mongo";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log('---- ENTRO A INDEX ----');
-  
-  try {
-    console.log('TRY HANDLER');
+  console.log("---- ENTRO A INDEX ----");
+
+  // 🧪 TEST 1: ¿Vercel responde sin DB?
+  if (req.url === "/api/ping") {
+    return res.json({ ok: true, ts: Date.now() });
+  }
+
+  // 🧪 TEST 2: ¿DB conecta y query resuelve?
+  if (req.url === "/api/dbtest") {
     await connectDB();
-    console.log('✅ DB conectada, delegando a Express...');
+    const count = await Project.countDocuments(); // más ligero que find()
+    return res.json({ ok: true, count });
+  }
+
+  try {
+    console.log("TRY HANDLER");
+    await connectDB();
+    console.log("✅ DB conectada, delegando a Express...");
 
     // ✅ Elimina serverless-http — usa Express directamente
     await new Promise<void>((resolve, reject) => {
@@ -18,9 +31,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         else resolve();
       });
     });
-
   } catch (error: any) {
-    console.error('❌ Handler error:', error.message);
+    console.error("❌ Handler error:", error.message);
     if (!res.headersSent) {
       res.status(503).json({ error: error.message });
     }
