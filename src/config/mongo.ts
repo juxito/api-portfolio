@@ -24,7 +24,7 @@ global.mongooseCache = cached;
 
 export async function connectDB(): Promise<typeof mongoose> {
   console.log("Connecting to MongoDB...");
-  
+
   // ✅ Reutiliza conexión existente y sana
   if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
@@ -37,29 +37,36 @@ export async function connectDB(): Promise<typeof mongoose> {
   }
 
   if (!cached.promise) {
-    console.log('!!!!!cached.promise');
-    
+    console.log("🔄 Iniciando mongoose.connect()...");
+    console.log("🔗 URI definida:", !!MONGO_URI);
+    console.log("🔗 URI preview:", MONGO_URI?.substring(0, 30) + "..."); // solo primeros 30 chars
+
     cached.promise = mongoose
       .connect(MONGO_URI as string, {
         bufferCommands: false,
-        serverSelectionTimeoutMS: 10000, // ✅ Falla en 10s si Atlas no responde
-        connectTimeoutMS: 10000, // ✅ Timeout al establecer socket
-        socketTimeoutMS: 30000, // ✅ Timeout por operación
-        maxPoolSize: 1, // ✅ Serverless solo necesita 1 conexión
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 30000,
+        maxPoolSize: 1,
         minPoolSize: 0,
       })
+      .then((conn) => {
+        console.log("✅ mongoose.connect() resolvió OK");
+        return conn;
+      })
       .catch((err) => {
-        console.error("Error connecting to MongoDB:", err);
-        
-        // ✅ Limpia el cache si falla — permite reintentar en la próxima llamada
+        console.error("❌ mongoose.connect() rechazó:", err.message);
+        console.error("❌ Error code:", err.code);
+        console.error("❌ Error name:", err.name);
         cached.promise = null;
         cached.conn = null;
         throw err;
       });
   }
 
-  console.log('*!!!!await cached.promise');
-
+  console.log("⏳ Esperando await cached.promise...");
   cached.conn = await cached.promise;
+  console.log("✅ Conexión establecida");
+
   return cached.conn;
 }
