@@ -38,6 +38,13 @@ app.use(express.json());
 // const swaggerDocument = require("../swagger-output.json");
 // app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// app.ts — temporal para diagnóstico
+app.use("/", (req, res, next) => {
+  console.log('📍 Express recibió URL:', req.url);
+  console.log('📍 Express recibió method:', req.method);
+  next();
+});
+
 app.use("/", projectsRoutes);
 
 export default app;

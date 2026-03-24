@@ -5,16 +5,15 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log("---- ENTRO A INDEX ----");
+  console.log("📍 req.url original:", req.url);
 
-  // 🧪 TEST 1: ¿Vercel responde sin DB?
   if (req.url === "/api/ping") {
     return res.json({ ok: true, ts: Date.now() });
   }
 
-  // 🧪 TEST 2: ¿DB conecta y query resuelve?
   if (req.url === "/api/dbtest") {
     await connectDB();
-    const count = await Project.countDocuments(); // más ligero que find()
+    const count = await Project.countDocuments();
     return res.json({ ok: true, count });
   }
 
@@ -22,15 +21,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     await connectDB();
     console.log("✅ DB conectada, delegando a Express...");
 
-    // ✅ Reemplaza serverless(app)(req, res) por esto
-    await new Promise<void>((resolve, reject) => {
-      console.log("PROMIMSE app");
+    // ✅ Quita el prefijo /api para que Express encuentre la ruta
+    if (req.url?.startsWith("/api")) {
+      req.url = req.url.replace("/api", "") || "/";
+    }
+    console.log("📍 req.url normalizada:", req.url);
 
+    await new Promise<void>((resolve, reject) => {
+      console.log("PROMISE app");
       app(req as any, res as any, (err?: any) => {
-        if (err) reject(err);
-        else resolve();
+        if (err) {
+          console.error("❌ Express error:", err.message);
+          reject(err);
+        } else {
+          console.log("✅ Express manejó la solicitud correctamente");
+          resolve();
+        }
       });
     });
+
   } catch (error: any) {
     console.error("❌ Handler error:", error.message);
     if (!res.headersSent) {
