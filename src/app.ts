@@ -30,7 +30,7 @@ app.use(
 );
 
 // IMPORTANTE: manejar OPTIONS
-app.options("*", cors());
+// app.options("*", cors());
 
 app.use(express.json());
 
