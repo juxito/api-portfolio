@@ -8,7 +8,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  "https://api-portfolio-kappa.vercel.app"
+  "https://portfolio-brown-eight-43.vercel.app"
 ];
 
 app.use(
@@ -30,7 +30,7 @@ app.use(
 );
 
 // IMPORTANTE: manejar OPTIONS
-// app.options("*", cors());
+app.options("*", cors());
 
 app.use(express.json());
 
